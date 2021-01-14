@@ -52,6 +52,8 @@ public class ElevensBoard extends Board {
     @Override
     public boolean isLegal(List<Integer> selectedCards) {
         if (containsPairSum11(selectedCards) || containsJQK(selectedCards))
+          return true;
+        return false;
     }
 
     /**
@@ -66,10 +68,24 @@ public class ElevensBoard extends Board {
     public boolean anotherPlayIsPossible() {
         // selectedCards is a list of the indexes of
         // all cards on the board
+        List<Integer> combinationCheck = cardIndexes();
         List<Integer> selectedCards = cardIndexes();
-
-        // YOUR CODE HERE
-        return true;
+        for (int i = 0; i < selectedCards.size(); i++) {
+          combinationCheck.add(i);
+          for (int j = 0; j < selectedCards.size(); i++) {
+            combinationCheck.add(j);
+            if (containsPairSum11(combinationCheck) && i != j)
+              return true;
+            for (int k = 0; k < selectedCards.size(); k++) {
+              combinationCheck.add(k);
+              if (i != j && k != i && k != j && containsJQK(combinationCheck))
+                return true;
+              combinationCheck.remove(k);
+            }
+            combinationCheck.remove(j);
+          }
+          combinationCheck.remove(i);
+        }
     }
 
     /**
@@ -98,7 +114,7 @@ public class ElevensBoard extends Board {
       ArrayList<Integer> king = new ArrayList();
       king.add(11);
       king.add(12);
-      king.add(13)
+      king.add(13);
       for (int i = 0; i < 9; i++) {
         if (selectedCards.get(i / 3) == king.get(i % 3)) {
           king.remove(i % 3);
